@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Inventory & Billing System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-main">
+                    <div class="header-icon">
+                        <i data-lucide="package"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1 class="header-title">Grocery Inventory & Billing</h1>
+                        <p class="header-subtitle">Streamline your business with our advanced management system</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard-container">
+            <div class="dashboard-stats">
+                <div class="stat-card stat-card-blue">
+                    <div class="stat-card-content">
+                        <div class="stat-icon">
+                            <i data-lucide="package"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Total Products</p>
+                            <p class="stat-value" id="total-products">0</p>
+                        </div>
+                        <div class="stat-decoration"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-green">
+                    <div class="stat-card-content">
+                        <div class="stat-icon">
+                            <i data-lucide="bar-chart-3"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Total Value</p>
+                            <p class="stat-value" id="total-value">₹0</p>
+                        </div>
+                        <div class="stat-decoration"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-orange">
+                    <div class="stat-card-content">
+                        <div class="stat-icon">
+                            <span class="alert-icon">!</span>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Low Stock Alerts</p>
+                            <p class="stat-value" id="low-stock-count">0</p>
+                        </div>
+                        <div class="stat-decoration"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-purple">
+                    <div class="stat-card-content">
+                        <div class="stat-icon">
+                            <span class="category-icon">#</span>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Categories</p>
+                            <p class="stat-value" id="categories-count">0</p>
+                        </div>
+                        <div class="stat-decoration"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tabs-list">
+                        <button class="tab-trigger active" data-tab="stock">
+                            <i data-lucide="package"></i>
+                            Stock Management
+                        </button>
+                        <button class="tab-trigger" data-tab="add">
+                            <i data-lucide="plus"></i>
+                            <span class="add-tab-text">Add Product</span>
+                        </button>
+                        <button class="tab-trigger" data-tab="billing">
+                            <i data-lucide="receipt"></i>
+                            Billing System
+                        </button>
+                    </div>
+
+                    <!-- Stock Management Tab -->
+                    <div class="tab-content active" id="stock-tab">
+                        <!-- Low Stock Alert -->
+                        <div class="low-stock-alert card hidden" id="low-stock-alert">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="title-icon">
+                                        <i data-lucide="alert-triangle"></i>
+                                    </div>
+                                    Low Stock Alert
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="alert-message" id="alert-message"></p>
+                                <div class="alert-badges" id="alert-badges"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stock Table -->
+                        <div class="card">
+                            <div class="card-header stock-header">
+                                <div class="card-title">
+                                    <div class="title-icon title-icon-blue">
+                                        <i data-lucide="package"></i>
+                                    </div>
+                                    Stock Inventory
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr class="table-header-row">
+                                                <th>Product Name</th>
+                                                <th>Category</th>
+                                                <th>Quantity</th>
+                                                <th>Unit</th>
+                                                <th>Price (₹)</th>
+                                                <th>Notes</th>
+                                                <th class="text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="products-table-body">
+                                            <tr>
+                                                <td colspan="7" class="no-products">
+                                                    No products found. Add your first product to get started.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Product Tab -->
+                    <div class="tab-content" id="add-tab">
+                        <div class="card">
+                            <div class="card-header add-header">
+                                <div class="card-title">
+                                    <div class="title-icon title-icon-emerald">
+                                        <i data-lucide="plus" id="form-icon"></i>
+                                    </div>
+                                    <span id="form-title">Add New Product</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <form id="product-form" class="product-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="product-name">Product Name *</label>
+                                            <input type="text" id="product-name" placeholder="Enter product name" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="product-category">Category *</label>
+                                            <div class="category-input-group">
+                                                <select id="product-category" class="category-select">
+                                                    <option value="">Select category</option>
+                                                </select>
+                                                <input type="text" id="new-category" placeholder="Enter new category" class="hidden">
+                                                <button type="button" id="toggle-category" class="category-toggle-btn">
+                                                    <i data-lucide="plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="product-qty">Quantity *</label>
+                                            <input type="number" id="product-qty" min="0" placeholder="Enter quantity" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="product-unit">Unit</label>
+                                            <input type="text" id="product-unit" placeholder="e.g., pcs, kg, liters" value="pcs">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="product-price">Price (₹) *</label>
+                                            <input type="number" id="product-price" min="0" step="0.01" placeholder="Enter price" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="product-notes">Notes</label>
+                                        <textarea id="product-notes" rows="3" placeholder="Additional notes about the product"></textarea>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i data-lucide="save"></i>
+                                            <span id="save-button-text">Save Product</span>
+                                        </button>
+                                        <button type="button" id="cancel-edit" class="btn btn-secondary hidden">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Billing Tab -->
+                    <div class="tab-content" id="billing-tab">
+                        <div class="billing-grid">
+                            <!-- Customer Information -->
+                            <div class="card">
+                                <div class="card-header customer-header">
+                                    <div class="card-title">
+                                        <div class="title-icon title-icon-purple">
+                                            <i data-lucide="user"></i>
+                                        </div>
+                                        Customer Information
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <form id="customer-form" class="customer-form">
+                                        <div class="form-grid-2">
+                                            <div class="form-group">
+                                                <label for="customer-name">Customer Name *</label>
+                                                <input type="text" id="customer-name" placeholder="Enter customer name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="customer-age">Age</label>
+                                                <input type="number" id="customer-age" placeholder="Enter age">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="customer-mobile">Mobile Number *</label>
+                                            <input type="text" id="customer-mobile" placeholder="Enter mobile number">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="customer-address">Address</label>
+                                            <textarea id="customer-address" rows="2" placeholder="Enter address"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="customer-notes">Notes</label>
+                                            <textarea id="customer-notes" rows="2" placeholder="Additional notes"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Product Selection -->
+                            <div class="card">
+                                <div class="card-header product-selection-header">
+                                    <div class="card-title">
+                                        <div class="title-icon title-icon-blue">
+                                            <i data-lucide="shopping-cart"></i>
+                                        </div>
+                                        Add Products
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="form-group">
+                                        <label for="product-select">Select Product</label>
+                                        <select id="product-select">
+                                            <option value="">Choose a product</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" id="add-to-order" class="btn btn-primary full-width" disabled>
+                                        <i data-lucide="plus"></i>
+                                        Add to Order
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="card">
+                            <div class="card-header order-header">
+                                <div class="card-title">
+                                    <div class="title-icon title-icon-emerald">
+                                        <i data-lucide="receipt"></i>
+                                    </div>
+                                    Order Summary
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr class="table-header-row">
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Total</th>
+                                                <th class="text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="order-table-body">
+                                            <tr>
+                                                <td colspan="5" class="no-products">
+                                                    No items in order. Add products to get started.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="order-total hidden" id="order-total-section">
+                                    <div class="total-display">
+                                        <span class="total-label">Subtotal: ₹<span id="order-subtotal">0</span></span>
+                                    </div>
+                                    <button type="button" id="generate-bill" class="btn btn-primary btn-lg">
+                                        <i data-lucide="receipt"></i>
+                                        Generate Bill
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoice-modal" class="modal hidden">
+        <div class="invoice-card">
+            <div class="invoice-header">
+                <h2 class="invoice-title">Invoice</h2>
+                <div class="invoice-actions">
+                    <button id="print-invoice" class="btn btn-outline">
+                        <i data-lucide="printer"></i>
+                        Print
+                    </button>
+                    <button id="close-invoice" class="btn btn-outline">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="invoice-content">
+                <!-- Store Header -->
+                <div class="store-header">
+                    <h1 class="store-name">Grocery Store</h1>
+                    <p class="store-tagline">Fresh Products • Quality Service • Premium Experience</p>
+                </div>
+
+                <div class="invoice-separator"></div>
+
+                <!-- Invoice Details -->
+                <div class="invoice-details-grid">
+                    <div class="invoice-details">
+                        <h3>Invoice Details</h3>
+                        <p><strong>Date:</strong> <span id="invoice-date"></span></p>
+                        <p><strong>Invoice #:</strong> <span id="invoice-number"></span></p>
+                    </div>
+                    <div class="customer-details">
+                        <h3>Customer Details</h3>
+                        <div id="invoice-customer-info"></div>
+                    </div>
+                </div>
+
+                <div class="invoice-separator"></div>
+
+                <!-- Items Table -->
+                <div class="invoice-items">
+                    <h3>Items</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr class="table-header-row">
+                                    <th>Item</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-right">Price</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="invoice-separator"></div>
+
+                <!-- Footer -->
+                <div class="invoice-footer">
+                    <p class="thank-you">Thank you for your business!</p>
+                    <p class="contact-info">For any queries, please contact us at support@grocerystore.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
